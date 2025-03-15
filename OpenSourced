@@ -171,4 +171,28 @@ local MultiDropdown = Tabs.Event:AddDropdown("MultiDropdown", {
        end
     end
  })
- 
+
+local MultiDropdown = Tabs.Event:AddDropdown("MerchantDropdown", {
+    Title = "Select Merchants to Purchase",
+    Values = {"CloverMerchant", "GoldenMerchant", "DiamondMerchant"},  -- Directly listed merchants
+    Multi = true,  -- Enables multi-selection
+})
+
+-- Function to handle purchase requests
+local function purchaseMerchant(selectedMerchants)
+    for merchant, isSelected in pairs(selectedMerchants) do
+        if isSelected then
+            local args = {
+                [1] = merchant,  -- Selected merchant name
+                [2] = 2          -- Quantity (Adjust as needed)
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("CustomMerchants_Purchase"):InvokeServer(unpack(args))
+            print("Purchased from: " .. merchant)
+        end
+    end
+end
+
+-- Trigger purchase when selections change
+MultiDropdown:OnChanged(function(selectedMerchants)
+    purchaseMerchant(selectedMerchants)
+end)
