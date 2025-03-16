@@ -24,7 +24,7 @@ local Tabs = {
 
 -- Clover Event
 local Toggle = Tabs.Event:AddToggle("Event", {
-    Title = "AutoUse Huge Instant Charge Token", 
+    Title = "Auto Open Clover Egg When Max", 
     Description = "",
     Default = false,
     Callback = function(state)
@@ -44,7 +44,7 @@ local Toggle = Tabs.Event:AddToggle("Event", {
                             local currentPoints = CloverEventCmds.GetEggPoints(MINE)
                             local maxPoints = CloverEventCmds.GetMaxEggPoints(MINE)
                             
-                            if currentPoints >= maxPoints then
+                            if currentPoints > maxPoints then
                                 game:GetService("ReplicatedStorage"):WaitForChild("Network")
                                     :WaitForChild("Clovers_HatchEgg"):InvokeServer()
                             end
@@ -57,7 +57,7 @@ local Toggle = Tabs.Event:AddToggle("Event", {
         else
             getgenv().toggle = false
         end
-    end 
+    end
 })
 
 local Toggle = Tabs.Event:AddToggle("Event", 
