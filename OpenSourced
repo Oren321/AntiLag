@@ -198,7 +198,7 @@ local Toggle = Tabs.Event:AddToggle("Event",
 
 local Toggle = Tabs.Event:AddToggle("Event", 
 {
-    Title = "AutoStuff", 
+    Title = "AutoUse Clover Power Potion", 
     Description = "",
     Default = false,
     Callback = function(state)
