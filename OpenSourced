@@ -327,6 +327,7 @@ local Toggle = Tabs.AutoFarm:AddToggle("AutoFarm",
             getgenv().toggle = true
             spawn(function()
                 while getgenv().toggle do
+                    game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("LootKey_Combine"):InvokeServer(1)
                     local args = {
                         [1] = 1,
                         [2] = false
