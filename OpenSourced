@@ -174,24 +174,27 @@ local Section = Tabs.Event:AddSection("AutoUse Clover Power Potion")
 --Event AutoUse
 local Toggle = Tabs.Event:AddToggle("Event", 
 {
-    Title = "AutoUse Clover Power Potion", 
+    Title = "AutoStuff", 
     Description = "",
     Default = false,
     Callback = function(state)
+        getgenv().toggle = state
+        
         if state then
-            getgenv().Consumables_Consume = true
-            task.spawn(function()
-                while getgenv().Consumables_Consume do
+            print("Toggle On")
+            spawn(function()
+                while getgenv().toggle do
                     local args = {
-                        [1] = "17674e60b22d4daf9b0e9c88fa7f7f78",
-                        [2] = 5
+                        [1] = "19d22eb1d5ac4953bcc7dd012f29ad32",
+                        [2] = 1
                     }
+                    
                     game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Consumables_Consume"):InvokeServer(unpack(args))
-                    task.wait(10)
+                    wait(1) -- Adjust the delay if needed
                 end
             end)
         else
-            getgenv().Consumables_Consume = false
+            print("Toggle Off")
         end
     end 
 })
