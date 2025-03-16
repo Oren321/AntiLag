@@ -185,10 +185,10 @@ local Toggle = Tabs.Event:AddToggle("Event",
                 while getgenv().toggle do
                     local args = {
                         [1] = "810b59b1d97643179551a6fc6b683284",
-                        [2] = 1
+                        [2] = 10
                     }
                     game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Consumables_Consume"):InvokeServer(unpack(args))                    
-                    wait(3)
+                    wait(10)
                 end
             end)
         else
@@ -209,10 +209,10 @@ local Toggle = Tabs.Event:AddToggle("Event",
                 while getgenv().toggle do
                     local args = {
                         [1] = "19d22eb1d5ac4953bcc7dd012f29ad32",
-                        [2] = 1
+                        [2] = 10
                     }
                     game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Consumables_Consume"):InvokeServer(unpack(args))
-                    wait(1) -- Adjust the delay if needed
+                    wait(10)
                 end
             end)
         else
@@ -233,10 +233,10 @@ local Toggle = Tabs.Event:AddToggle("Event",
                 while getgenv().toggle do
                     local args = {
                         [1] = "d4385ca987404640bce99f634008396a",
-                        [2] = 1
+                        [2] = 10
                     }
                     game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Consumables_Consume"):InvokeServer(unpack(args))
-                    wait(3)
+                    wait(10)
                 end
             end)
         else
