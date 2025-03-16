@@ -19,23 +19,43 @@ local Tabs = {
     Event = Window:AddTab({ Title = "Event", Icon = "" }),
     AutoFarm = Window:AddTab({ Title = "AutoFarm", Icon = "" }),
     AutoFish = Window:AddTab({ Title = "AutoFish", Icon = "" }),
+    AutoMine = Window:AddTab({ Title = "AutoMine", Icon = "" }),
 }
 
--- Event Toggles
-local Toggle = Tabs.Event:AddToggle("Event", 
-{
-    Title = "Auto Roll Clover Egg", 
+-- Clover Event
+local Toggle = Tabs.Event:AddToggle("Event", {
+    Title = "AutoUse Huge Instant Charge Token", 
     Description = "",
     Default = false,
     Callback = function(state)
+        getgenv().toggle = state
+
         if state then
-            getgenv().Eggs_Roll2 = true
-            while getgenv().Eggs_Roll2 do
-                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Clovers_HatchEgg"):InvokeServer()
-                task.wait(16)
-            end
+            spawn(function()
+                while getgenv().toggle do
+                    local TycoonCmds = require(game:GetService("ReplicatedStorage").Library.Client.TycoonCmds)
+                    local Clover = require(game:GetService("ReplicatedStorage").Library.Directory.Tycoons).Clover
+                    local CloverEventCmds = require(game:GetService("ReplicatedStorage").Library.Client.CloverEventCmds)
+
+                    while true do
+                        local MINE = TycoonCmds.Get(Clover)
+
+                        if MINE then
+                            local currentPoints = CloverEventCmds.GetEggPoints(MINE)
+                            local maxPoints = CloverEventCmds.GetMaxEggPoints(MINE)
+                            
+                            if currentPoints >= maxPoints then
+                                game:GetService("ReplicatedStorage"):WaitForChild("Network")
+                                    :WaitForChild("Clovers_HatchEgg"):InvokeServer()
+                            end
+                        end
+
+                        task.wait()
+                    end
+                end
+            end)
         else
-            getgenv().Eggs_Roll2 = false
+            getgenv().toggle = false
         end
     end 
 })
@@ -169,10 +189,9 @@ local Toggle = Tabs.Event:AddToggle("Event",
     end
 })
 
---AutoUse Clover Power Potion Section
+--Event AutoUse Clover Potions
 local Section = Tabs.Event:AddSection("AutoUse Clover Power Potion")
 
---Event AutoUse
 local Toggle = Tabs.Event:AddToggle("Event", 
 {
     Title = "AutoUse Clover Loot Potion", 
@@ -319,7 +338,7 @@ local Toggle = Tabs.AutoFarm:AddToggle("AutoFarm",
 
 local Toggle = Tabs.AutoFarm:AddToggle("AutoFarm", 
 {
-    Title = "Auto Open Crystal Chest", 
+    Title = "Auto Craft And Open Crystal Chest", 
     Description = "",
     Default = false,
     Callback = function(state)
@@ -473,10 +492,9 @@ local Toggle = Tabs.AutoFish:AddToggle("AutoFish",
     end 
 })
 
---AutoBuy Fishing Merchants Section
+--AutoBuy
 local Section = Tabs.AutoFish:AddSection("AutoBuy Fishing Merchants")
 
---AutoBuy
 local Toggle = Tabs.AutoFish:AddToggle("AutoFish", 
 {
     Title = "AutoBuy Default Fishing Merchant", 
@@ -533,6 +551,30 @@ local Toggle = Tabs.AutoFish:AddToggle("AutoFish",
             end
         else
             getgenv().AutoBuyIceFishingMerchant = false
+        end
+    end
+})
+
+--AutoMine
+local Toggle = Tabs.AutoMine:AddToggle("AutoMine", 
+{
+    Title = "AutoMine Dirt", 
+    Description = "",
+    Default = false,
+    Callback = function(state)
+        if state then
+            if not getgenv().toggle then
+                getgenv().toggle = true
+                spawn(function()
+                    while getgenv().toggle do
+                        game:GetService("ReplicatedStorage").Network.Mining_SetState:InvokeServer(true)
+                        game:GetService("ReplicatedStorage").Network.Mining_Attack:InvokeServer(6)
+                        task.wait()
+                    end
+                end)
+            end
+        else
+            getgenv().toggle = false
         end
     end
 })
