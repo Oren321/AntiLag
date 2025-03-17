@@ -1,14 +1,13 @@
-local FredHUb = loadstring(game:HttpGet("https://raw.githubusercontent.com/ProjectFred/Library/main/src"))()
+local BlossomPrivate = loadstring(game:HttpGet("https://raw.githubusercontent.com/ProjectFred/Library/main/src"))()
 
 --Window
-local Main = FredHUb:Window({
-    Title = "Private Script | By Oren",
+local Main = BlossomPrivate:Window({
+    Title = "Blossom Private",
 })
 
 --AutoFarm
 local AutoFarmTab = Main:Tab({
     Name = "AutoFarm",
-    tabColor = Color3.fromHex("#71d1f5"),
     Image = "rbxassetid://10709798174"
 })
 
@@ -29,7 +28,6 @@ AutoFarmTab:Toggle({
 --Event
 local EventTab = Main:Tab({
     Name = "Event",
-    tabColor = Color3.fromHex("#71d1f5"),
     Image = "rbxassetid://10709798174"
 })
 
