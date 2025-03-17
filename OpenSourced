@@ -33,40 +33,36 @@ local EventTab = Main:Tab({
     Image = "rbxassetid://10709798174"
 })
 
-local isToggled = false  -- This will track the toggle state globally
-
 EventTab:Toggle({
-    Name = "Quake Toggle",  -- Change the name to fit your context
-    Default = false,        -- You can adjust the default as needed
+    Name = "Auto Open Clover Egg When Max",
+    Default = false,  -- [OPTIONAL]
     Callback = function(var)
-        print("Quake Toggle", var)
-
-        -- Update the isToggled variable
-        isToggled = var
-
         if var then
-            task.spawn(function()
-                local TycoonCmds = require(game:GetService("ReplicatedStorage").Library.Client.TycoonCmds)
-                local Clover = require(game:GetService("ReplicatedStorage").Library.Directory.Tycoons).Clover
-                local CloverEventCmds = require(game:GetService("ReplicatedStorage").Library.Client.CloverEventCmds)
+            spawn(function()
+                while var do  -- Toggle using var
+                    local TycoonCmds = require(game:GetService("ReplicatedStorage").Library.Client.TycoonCmds)
+                    local Clover = require(game:GetService("ReplicatedStorage").Library.Directory.Tycoons).Clover
+                    local CloverEventCmds = require(game:GetService("ReplicatedStorage").Library.Client.CloverEventCmds)
 
-                -- Keep looping and checking until isToggled is false
-                while isToggled do
-                    local MINE = TycoonCmds.Get(Clover)
+                    while true do
+                        local MINE = TycoonCmds.Get(Clover)
 
-                    if MINE then
-                        local currentPoints = CloverEventCmds.GetEggPoints(MINE)
-                        local maxPoints = CloverEventCmds.GetMaxEggPoints(MINE)
-                        
-                        if currentPoints >= maxPoints then
-                            game:GetService("ReplicatedStorage"):WaitForChild("Network")
-                                :WaitForChild("Clovers_HatchEgg"):InvokeServer()
+                        if MINE then
+                            local currentPoints = CloverEventCmds.GetEggPoints(MINE)
+                            local maxPoints = CloverEventCmds.GetMaxEggPoints(MINE)
+
+                            if currentPoints >= maxPoints then
+                                game:GetService("ReplicatedStorage"):WaitForChild("Network")
+                                    :WaitForChild("Clovers_HatchEgg"):InvokeServer()
+                            end
                         end
-                    end
 
-                    task.wait()
+                        task.wait()
+                    end
                 end
             end)
+        else
+            var = false  -- Disable the toggle when var is false
         end
     end
 })
