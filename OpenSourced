@@ -157,7 +157,9 @@ EventTab:Toggle({
    end
 })
 
---Fish Tab
+FishTab:Label("Fishing!")
+
+--Fish 
 local FishTab = Window:Tab({
     Name = "Auto Fish",
     tabColor = Color3.fromRGB(255, 105, 180),
