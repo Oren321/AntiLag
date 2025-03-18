@@ -188,7 +188,6 @@ FishTab:Toggle({
     Default = false,
     Callback = function(var)
         isToggled = var
-        
         if isToggled then
             while isToggled do
                 local args = {
@@ -196,8 +195,7 @@ FishTab:Toggle({
                 }
                 game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Fishing_Fish"):InvokeServer(unpack(args))
                 game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Fishing_Success"):FireServer()
-                
-                task.wait(1)
+                task.wait()
             end
         end
     end
