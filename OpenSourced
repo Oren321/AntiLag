@@ -109,7 +109,7 @@ EventTab:Toggle({
 local isToggled = false
 
 EventTab:Toggle({
-   Name = "Auto Collect Hoppers Loot",
+   Name = "Claim Hoppers Storage Loot",
    Default = false,
    Callback = function(var)
        isToggled = var
