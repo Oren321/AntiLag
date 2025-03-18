@@ -157,8 +157,6 @@ EventTab:Toggle({
    end
 })
 
-FishTab:Label("Fishing!")
-
 --Fish 
 local FishTab = Window:Tab({
     Name = "Auto Fish",
@@ -202,3 +200,5 @@ FishTab:Toggle({
         end
     end
 })
+
+FishTab:Label("Fishing!")
