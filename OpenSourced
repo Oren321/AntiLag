@@ -200,5 +200,3 @@ FishTab:Toggle({
         end
     end
 })
-
-FishTab:Label("Fishing!")
