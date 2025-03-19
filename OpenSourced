@@ -52,7 +52,7 @@ local CloverEvent = window:Tab({
 
 local isToggled = false
 
-EventTab:Toggle({
+CloverEvent:Toggle({
    Name = "Auto Open Pot Of Gold At Max",
    Default = false,
    Callback = function(var)
@@ -86,7 +86,7 @@ EventTab:Toggle({
 
 local isToggled = false
 
-EventTab:Toggle({
+CloverEvent:Toggle({
    Name = "Auto Collect Clovers",
    Default = false,
    Callback = function(var)
@@ -120,7 +120,7 @@ EventTab:Toggle({
 
 local isToggled = false
 
-EventTab:Toggle({
+CloverEvent:Toggle({
    Name = "Auto Collect Hoppers Loot",
    Default = false,
    Callback = function(var)
@@ -143,7 +143,7 @@ local isToggled = false
 local patches = { "Patch_1", "Patch_2", "Patch_3", "Patch_4", "Patch_5", "Patch_6", "Patch_7", "Patch_8" }
 local categories = { "", "_Farmer", "_Speed1", "_Speed2", "_Quality1", "_Quality2", "_Speed3", "_Quality3" }
 
-EventTab:Toggle({
+CloverEvent:Toggle({
    Name = "Auto Buy Clover Pads",
    Default = false,
    Callback = function(var)
