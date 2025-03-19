@@ -231,7 +231,7 @@ MiniGames:Toggle({
 
 MiniGames:Label("Mining!")
 
-local MiningSpots = {
+local Ores = {
     "Dirt Ore",
     "Stone Ore",
     "Bronze Ore",
@@ -244,12 +244,12 @@ local MiningSpots = {
 }
 
 MiniGames:Dropdown({
-    Name = "Select Mining Spot",
-    Default = "Default",
-    Items = MiningSpots,
+    Name = "Select Ore",
+    Default = "Gold Ore",
+    Items = Ore,
     Multiselect = false,
     Callback = function(Value)
-        selectedMiningSpot = Value
+        selectedOre = Value
     end
 })
 
