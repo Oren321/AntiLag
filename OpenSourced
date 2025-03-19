@@ -243,15 +243,31 @@ local MiningSpots = {
     "Magma Ore",
 }
 
+local MiningSpotIDs = {
+    ["Dirt Ore"] = 1,
+    ["Stone Ore"] = 2,
+    ["Bronze Ore"] = 3,
+    ["Iron Ore"] = 4,
+    ["Gold Ore"] = 5,
+    ["Emerald Ore"] = 6,
+    ["Obsidian Ore"] = 7,
+    ["Runic Ore"] = 8,
+    ["Magma Ore"] = 9,
+}
+
+local selectedMiningSpotID = nil
+
 MiniGames:Dropdown({
     Name = "Select Mining Spot",
     Default = "Default",
     Items = MiningSpots,
     Multiselect = false,
     Callback = function(Value)
-        selectedMiningSpot = Value
+        selectedMiningSpotID = MiningSpotIDs[Value]
     end
 })
+
+local isToggled = false
 
 MiniGames:Toggle({
     Name = "Auto Mine",
@@ -259,14 +275,16 @@ MiniGames:Toggle({
     Callback = function(var)
         isToggled = var
         if isToggled then
-            while isToggled do
-                local args = {
-                    [1] = selectedMiningSpot
-                }
-                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Mining_Attack"):InvokeServer(unpack(args))
-                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Mining_SetState"):InvokeServer(unpack(args))
-                task.wait()
-            end
+            spawn(function()
+                while isToggled do
+                    if selectedMiningSpotID then
+                        local args = { [1] = selectedMiningSpotID }
+                        game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Mining_SetState"):InvokeServer(unpack(args))
+                        game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Mining_Attack"):InvokeServer(unpack(args))
+                    end
+                    task.wait()
+                end
+            end)
         end
     end
 })
