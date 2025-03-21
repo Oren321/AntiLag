@@ -66,131 +66,29 @@ AutoFarm:Toggle({
     end
 })
 
---Clover Event Tab
-local Clover = window:Tab({
-    Name = "Clover Event",
-    tabColor = Color3.fromRGB(255,255,255),
+--Event Tab
+local Event = window:Tab({
+    Name = "Event",
+    tabColor = Color3.fromRGB(255, 192, 203),
     Image = "rbxassetid://10709769841"
 })
 
 local isToggled = false
 
-Clover:Toggle({
-   Name = "Auto Open Pot Of Gold At Max",
-   Default = false,
-   Callback = function(var)
-       isToggled = var
-       if isToggled then
-           spawn(function()
-               while isToggled do
-                   local TycoonCmds = require(game:GetService("ReplicatedStorage").Library.Client.TycoonCmds)
-                   local Clover = require(game:GetService("ReplicatedStorage").Library.Directory.Tycoons).Clover
-                   local CloverEventCmds = require(game:GetService("ReplicatedStorage").Library.Client.CloverEventCmds)
-
-                   local MINE = TycoonCmds.Get(Clover)
-
-                   if MINE then
-                       local currentPoints = CloverEventCmds.GetEggPoints(MINE)
-                       local maxPoints = CloverEventCmds.GetMaxEggPoints(MINE)
-
-                       if currentPoints >= maxPoints then
-                           game:GetService("ReplicatedStorage"):WaitForChild("Network")
-                               :WaitForChild("Clovers_HatchEgg"):InvokeServer()
-                       end
-                   end
-                   task.wait()
-               end
-           end)
-       else
-           isToggled = false
-       end
-   end
+Event:Toggle({
+    Name = "Auto Mine Event",
+    Default = false,
+    Callback = function(var)
+        isToggled = var
+        if isToggled then
+            while isToggled do
+            local args1 = { [1] = true }
+            game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Mining_SetState"):InvokeServer(unpack(args1))
+            local args2 = { [1] = 12 }
+            game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Mining_Attack"):InvokeServer(unpack(args2))
+        end
+    end
 })
-
-local isToggled = false
-
-Clover:Toggle({
-    Name = "Auto Collect Clovers",
-    Default = false,
-    Callback = function(var)
-        isToggled = var
-        if isToggled then
-            task.spawn(function()
-                local clovers = workspace.__THINGS.Clovers
- 
-                local function fireTouchInterest(part)
-                    local playerChar = game.Players.LocalPlayer.Character
-                    local primaryPart = playerChar and playerChar.PrimaryPart or part
-                    firetouchinterest(part, primaryPart, 0)
-                    firetouchinterest(part, primaryPart, 1)
-                end
- 
-                while isToggled do
-                    for _, model in pairs(clovers:GetChildren()) do
-                        local part = model:FindFirstChild("Part")
-                        if part then
-                            fireTouchInterest(part)
-                        end
-                    end
-                    task.wait()
-                end
-            end)
-        else
-            isToggled = false
-        end
-    end
- })
-
- local isToggled = false
- 
- Clover:Toggle({
-    Name = "Auto Collect Hoppers Loot",
-    Default = false,
-    Callback = function(var)
-        isToggled = var
-        if isToggled then
-            task.spawn(function()
-                while isToggled do
-                    game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Clovers_HopperClaim"):InvokeServer()
-                    task.wait(5)
-                end
-            end)
-        else
-            isToggled = false
-        end
-    end
- })
-
- local isToggled = false
-
-local patches = { "Patch_1", "Patch_2", "Patch_3", "Patch_4", "Patch_5", "Patch_6", "Patch_7", "Patch_8" }
-local categories = { "", "_Farmer", "_Speed1", "_Speed2", "_Quality1", "_Quality2", "_Speed3", "_Quality3" }
-
-Clover:Toggle({
-    Name = "Auto Buy Clover Pads",
-    Default = false,
-    Callback = function(var)
-        isToggled = var
-        if isToggled then
-            task.spawn(function()
-                while isToggled do
-                    for _, patch in ipairs(patches) do
-                        for _, category in ipairs(categories) do
-                            local args = {
-                                [1] = patch .. category,
-                                [2] = "Clover"
-                            }
-                            game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Tycoons: Purchase"):InvokeServer(unpack(args))
-                            task.wait()
-                        end
-                    end
-                end
-            end)
-        else
-            isToggled = false
-        end
-    end
- })
 
 --Mini Games Tab
 local MiniGames = window:Tab({
@@ -251,5 +149,3 @@ MiniGames:Toggle({
         end
     end
 })
-
-MiniGames:Label("Mining!")
