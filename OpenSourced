@@ -25,7 +25,7 @@ local window = PrivateScript:Window({
 --AutoFarm Tab
 local AutoFarm = window:Tab({
     Name = "AutoFarm",
-    tabColor = Color3.fromRGB(180, 240, 67),
+    tabColor = Color3.fromRGB(255, 192, 203),
     Image = "rbxassetid://10709769841"
 })
 
@@ -43,10 +43,33 @@ AutoFarm:Toggle({
    end
 })
 
+local isToggled = false
+
+AutoFarm:Toggle({
+    Name = "Auto Collect Orbs",
+    Default = false,
+    Callback = function(var)
+        isToggled = var
+        if isToggled then
+            spawn(function()
+                while isToggled do
+                    local orbs = workspace.__THINGS.Orbs:GetChildren()
+                    for _, orb in pairs(orbs) do
+                        local args = { [1] = { orb.Name } }
+                        game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Orbs: Collect"):FireServer(unpack(args))
+                        orb:Destroy()
+                    end
+                    task.wait()
+                end
+            end)
+        end
+    end
+})
+
 --Clover Event Tab
 local Clover = window:Tab({
     Name = "Clover Event",
-    tabColor = Color3.fromRGB(180, 240, 67),
+    tabColor = Color3.fromRGB(255,255,255),
     Image = "rbxassetid://10709769841"
 })
 
@@ -172,7 +195,7 @@ Clover:Toggle({
 --Mini Games Tab
 local MiniGames = window:Tab({
     Name = "Mini Games",
-    tabColor = Color3.fromRGB(180, 240, 67),
+    tabColor = Color3.fromRGB(255, 192, 203),
     Image = "rbxassetid://10709769841"
 })
 
@@ -230,49 +253,3 @@ MiniGames:Toggle({
 })
 
 MiniGames:Label("Mining!")
-
-local Ores = {
-    "Dirt Ore",
-    "Stone Ore",
-    "Bronze Ore",
-    "Iron Ore",
-    "Gold Ore",
-    "Emerald Ore",
-    "Obsidian Ore",
-    "Runic Ore",
-    "Magma Ore",
-}
-
-MiniGames:Dropdown({
-    Name = "Select Ore",
-    Default = "Gold Ore",
-    Items = Ore,
-    Multiselect = false,
-    Callback = function(Value)
-        selectedOre = Value
-    end
-})
-
-MiniGames:Toggle({
-    Name = "Auto Mine",
-    Default = false,
-    Callback = function(var)
-        isToggled = var
-        if isToggled then
-            while isToggled do
-                local args = {
-                    [1] = Dirt Ore
-                }
-                local args = {
-                    [1] = true
-                }
-                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Mining_SetState"):InvokeServer(unpack(args))
-                local args = {
-                    [1] = 6
-                }
-                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Mining_Attack"):InvokeServer(unpack(args))                
-                task.wait()
-            end
-        end
-    end
-})
