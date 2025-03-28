@@ -1,151 +1,55 @@
--- Gui Source
-local PrivateScript = loadstring(game:HttpGet("https://raw.githubusercontent.com/OrenSck/Src/refs/heads/main/Gui", true))()
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local petsFolder = workspace.__THINGS.Pets
+local breakablesFolder = workspace.__THINGS.Breakables
 
--- Making The Window
-local window = PrivateScript:Window({
-    Title = "Pets Go | Private Script", 
-    isMobile = false,
-    Size = {
-        X = 550,
-        Y = 400
-    },
-    CustomTheme = {
-        defaultTab = Color3.fromHex("#a49ae6"),
-        background = Color3.fromRGB(40, 44, 50),
-        secondaryBackground = Color3.fromRGB(49, 56, 66),
-        tertiaryBackground = Color3.fromRGB(57, 63, 75),
-        text = Color3.fromRGB(220,221,225),
-        image = Color3.fromRGB(220,221,225),
-        placeholder = Color3.fromRGB(165,166,169),
-        close = Color3.fromRGB(190, 100, 105)
-    },
-    KeyCode = Enum.KeyCode.T
-})
+local petIDs = {}
+local pinataID = nil
 
---AutoFarm Tab
-local AutoFarm = window:Tab({
-    Name = "AutoFarm",
-    tabColor = Color3.fromRGB(255, 192, 203),
-    Image = "rbxassetid://10709769841"
-})
+for _, pet in pairs(petsFolder:GetChildren()) do
+    if pet:IsA("Model") then
+        table.insert(petIDs, pet.Name)
+    end
+end
 
-local isToggled = false
+local function attackTarget(targetID)
+    ReplicatedStorage.Network.Breakables_PlayerDealDamage:FireServer(targetID)
+    for i = 1, math.min(5, #petIDs) do
+        ReplicatedStorage.Network.Breakables_JoinPetBulk:FireServer({[1] = {[petIDs[i]] = targetID}})
+    end
+end
 
-AutoFarm:Toggle({
-   Name = "Auto Roll",
-   Default = false,
-   Callback = function(var)
-       isToggled = var
-       while isToggled do
-           game:GetService("ReplicatedStorage").Network.Eggs_Roll:InvokeServer()
-           task.wait()
-       end
-   end
-})
+while true do
+    local bossFound = false
+    local blackFound = false
+    local targetID = nil
 
-local isToggled = false
-
-AutoFarm:Toggle({
-    Name = "Auto Collect Orbs",
-    Default = false,
-    Callback = function(var)
-        isToggled = var
-        if isToggled then
-            spawn(function()
-                while isToggled do
-                    local orbs = workspace.__THINGS.Orbs:GetChildren()
-                    for _, orb in pairs(orbs) do
-                        local args = { [1] = { orb.Name } }
-                        game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Orbs: Collect"):FireServer(unpack(args))
-                        orb:Destroy()
+    if pinataID then
+        attackTarget(pinataID)
+        task.wait(0.5)
+    else
+        for _, breakable in pairs(breakablesFolder:GetChildren()) do
+            if breakable:IsA("Model") then
+                local attributes = breakable:GetAttributes()
+                for _, value in pairs(attributes) do
+                    local attr = tostring(value)
+                    if attr == "Pinata Boss" then
+                        pinataID = tonumber(breakable.Name)
+                        bossFound = true
+                        break
+                    elseif attr == "Black Lucky Block" then
+                        targetID = tonumber(breakable.Name)
+                        blackFound = true
+                        break
                     end
-                    task.wait()
                 end
-            end)
-        end
-    end
-})
-
---Event Tab
-local Event = window:Tab({
-    Name = "Event",
-    tabColor = Color3.fromRGB(255, 192, 203),
-    Image = "rbxassetid://10709769841"
-})
-
-local isToggled = false
-
-Event:Toggle({
-    Name = "Auto Mine Event",
-    Default = false,
-    Callback = function(var)
-        isToggled = var
-        if isToggled then
-            while isToggled do
-            local args1 = { [1] = true }
-            game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Mining_SetState"):InvokeServer(unpack(args1))
-            local args2 = { [1] = 12 }
-            game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Mining_Attack"):InvokeServer(unpack(args2))
-        end
-    end
-})
-
---Mini Games Tab
-local MiniGames = window:Tab({
-    Name = "Mini Games",
-    tabColor = Color3.fromRGB(255, 192, 203),
-    Image = "rbxassetid://10709769841"
-})
-
-MiniGames:Label("Fishing!")
-
-local FishingSpots = {
-    "Default",
-    "Ice",
-    "Kraken",
-    "Corrupted",
-}
-
-MiniGames:Dropdown({
-    Name = "Select Fishing Spot",
-    Default = "Default",
-    Items = FishingSpots,
-    Multiselect = false,
-    Callback = function(Value)
-        selectedFishingSpot = Value
-    end
-})
-
-local isToggled = false
-
-MiniGames:Toggle({
-    Name = "Auto Fish",
-    Default = false,
-    Callback = function(var)
-        isToggled = var
-        if isToggled then
-            while isToggled do
-                local args = {
-                    [1] = selectedFishingSpot
-                }
-                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Fishing_Fish"):InvokeServer(unpack(args))
-                game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Fishing_Success"):FireServer()
-                task.wait()
+                if bossFound then break end
             end
         end
-    end
-})
 
-local isToggled = false
-
-MiniGames:Toggle({
-    Name = "Claim Fishing Storage Loot",
-    Default = false,
-    Callback = function(var)
-        isToggled = var
-        while isToggled do
-            game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("Fishing_FishermanClaim"):InvokeServer()
-            task.wait(5)
+        if not bossFound and blackFound and targetID then
+            attackTarget(targetID)
+            task.wait(0.5)
         end
     end
-})
+    task.wait(0.1)
+end
